@@ -23,8 +23,8 @@ node.each_attribute do |k,v|
 	total.push line
 end
 
-execute "Output node list" do
-	command "echo \"#{total}\" >>/tmp/total.out"
+file "/tmp/total.out" do
+	content total.to_s
 end
 
 
