@@ -8,7 +8,7 @@
 #
 
 node['opsworks']['instance']['layers'].each do |layer|
-	if Regexp.new(node['opsworks-mongodb']['replset_pattern']).match(layer)
+	if Regexp.new(node['opsworks-mongodb']['replset_layer_pattern']).match(layer)
 		node.normal['mongodb']['shard_name'] = $1
 		node.normal['mongodb']['config']['replSet'] = $1
 	end
