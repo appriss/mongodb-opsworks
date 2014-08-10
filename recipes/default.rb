@@ -24,7 +24,7 @@ node.each_attribute do |k,v|
 end
 
 execute "Output node list" do
-	command "echo #{total} >>/tmp/total.out"
+	command "echo \"#{total}\" >>/tmp/total.out"
 end
 
 
