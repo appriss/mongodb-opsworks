@@ -18,7 +18,7 @@ node_overrides = node['opsworks-mongodb']['instance_overrides'][node['opsworks']
 
 
 total = Array.new
-node['mongodb'].each_attribute do |k,v|
+node.each_attribute do |k,v|
 	line = "k: #{k}, v:#{v}"
 	total.push line
 end
