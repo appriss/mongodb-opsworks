@@ -9,6 +9,7 @@
 
 node['opsworks']['instance']['layers'].each do |layer|
 	Chef::Log.info("processing layer #{layer}.")
+	Chef::Log.info("Layer's name is #{layer['name']}.")
 	if Regexp.new(node['opsworks-mongodb']['replset_layer_pattern']).match(layer['name'])
 		Chef::Log.info("Setting Shard values to #{$1}")
 		node.normal['mongodb']['shard_name'] = $1
