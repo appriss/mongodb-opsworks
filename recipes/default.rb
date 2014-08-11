@@ -43,8 +43,8 @@ node['opsworks']['layers'].each_attribute do |layer,config|
 	case 
 	when Regexp.new(node['opsworks-mongodb']['replset_layer_pattern']).match(layer_name)
 		shard_or_replset_name = $1
-		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
-			item = init_item(instance,config)
+		node['opsworks']['layers'][layer]['instances'].each do |instance|
+			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item['mongodb']['is_replicaset'] = true
 			if node['opsworks-mongodb']['sharded']
 				item['mongodb']['is_shard'] = true
@@ -55,14 +55,14 @@ node['opsworks']['layers'].each_attribute do |layer,config|
 		end
 		save_item(item)
 	when layer_name == node['opsworks-mongodb']['configsvr_layer']
-		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
-			item = init_item(instance,config)
+		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance|
+			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item['mongodb']['is_configserver'] = true
 			save_item
 		end
 	when layer_name == node['opsworks-mongodb']['mongos_layer']
-		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
-			item = init_item(instance,config)
+		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance|
+			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item['mongodb']['is_mongos'] = true
 			item['mongodb']['config']['instance_name'] = "mongos"
 		end
