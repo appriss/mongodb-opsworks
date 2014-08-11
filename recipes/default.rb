@@ -39,7 +39,7 @@ end
 cluster_config = Chef::DataBag.new
 cluster_config.name("cluster_config")
 node['opsworks']['layers'].each do |layer|
-	layer_name = layer['name']
+	layer_name = node['opsworks']['layers'][layer]['name']
 	case 
 	when Regexp.new(node['opsworks-mongodb']['replset_layer_pattern']).match(layer_name)
 		shard_or_replset_name = $1
