@@ -22,7 +22,7 @@ def init_item(instance_name,instance_config)
 	#Deep copy node set
 	instance_item = Marshal.load(Marshal.dump(instance_config)).to_hash
 	Chef::Log.warn("Object type is #{instance_item.class}")
-	instance_item.set['id'] = instance_name
+	instance_item['id'] = instance_name
 	overrides = node['opsworks-mongodb']['instance_overrides'][instance_name]
 	if overrides
 		Chef::Mixin::DeepMerge(instance_item,overrides)
