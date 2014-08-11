@@ -39,6 +39,8 @@ end
 cluster_config = Chef::DataBag.new
 cluster_config.name("cluster_config")
 node['opsworks']['layers'].each do |layer|
+	Chef::Log.info("Layer name is #{layer}")
+	Chef::Log.ingo("Layer details are #{node['opsworks']['layers'][layer]}")
 	layer_name = node['opsworks']['layers'][layer]['name']
 	case 
 	when Regexp.new(node['opsworks-mongodb']['replset_layer_pattern']).match(layer_name)
