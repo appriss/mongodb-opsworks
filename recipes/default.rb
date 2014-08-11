@@ -36,7 +36,7 @@ def save_item(item)
 	db_item.save
 end
 
-cluster_config = Chef::Databag.new
+cluster_config = Chef::DataBag.new
 cluster_config.name("cluster_config")
 node['opsworks']['layers'].each_attribute do |layer,config|
 	layer_name = layer['name']
