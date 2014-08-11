@@ -22,7 +22,7 @@ def init_item(instance_name,instance_config)
 	#Deep copy node set
 	attrs = node.attributes
 	Chef::Log.info("Attribute class is: #{attrs.class}")
-	instance_item = JSON.parse(attrs.to_json)
+	instance_item = JSON.parse(attrs.to_hash.to_json)
 	Chef::Log.warn("Object type is #{instance_item.class}")
 	instance_item['id'] = instance_name
 	overrides = node['opsworks-mongodb']['instance_overrides'][instance_name]
