@@ -57,19 +57,21 @@ node['opsworks']['layers'].each do |layer,config|
 			else
 				item['mongodb']['config']['replSet'] = shard_or_replset_name
 			end
+			save_item(item)
 		end
-		save_item(item)
+		
 	when layer_name == node['opsworks-mongodb']['configsvr_layer']
 		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item['mongodb']['is_configserver'] = true
-			save_item
+			save_item(item)
 		end
 	when layer_name == node['opsworks-mongodb']['mongos_layer']
 		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item['mongodb']['is_mongos'] = true
 			item['mongodb']['config']['instance_name'] = "mongos"
+			save_item(item)
 		end
 	end
 end
