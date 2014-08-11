@@ -76,7 +76,7 @@ node['opsworks']['layers'].each do |layer,config|
 	end
 end
 
-Chef::Log.info('Databag: #{cluster_config}')
+Chef::Log.info("Databag: #{cluster_config}")
 
 
 
