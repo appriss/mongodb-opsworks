@@ -20,7 +20,7 @@ end
 
 def init_item(instance_name,instance_config)
 	#Deep copy node set
-	instance_item = Marshal.load(Marshal.dump(instance_config))
+	instance_item = Marshal.load(Marshal.dump(instance_config)).to_hash
 	Chef::Log.warn("Object type is #{instance_item.class}")
 	instance_item.set['id'] = instance_name
 	overrides = node['opsworks-mongodb']['instance_overrides'][instance_name]
@@ -48,24 +48,24 @@ node['opsworks']['layers'].each do |layer,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item['mongodb']['is_replicaset'] = true
 			if node['opsworks-mongodb']['sharded']
-				item.set['mongodb']['is_shard'] = true
-				item.set['mongodb']['shard_name'] = shard_or_replset_name
+				item['mongodb']['is_shard'] = true
+				item['mongodb']['shard_name'] = shard_or_replset_name
 			else
-				item.set['mongodb']['config']['replSet'] = shard_or_replset_name
+				item['mongodb']['config']['replSet'] = shard_or_replset_name
 			end
 		end
 		save_item(item)
 	when layer_name == node['opsworks-mongodb']['configsvr_layer']
 		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
-			item.set['mongodb']['is_configserver'] = true
+			item['mongodb']['is_configserver'] = true
 			save_item
 		end
 	when layer_name == node['opsworks-mongodb']['mongos_layer']
 		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
-			item.set['mongodb']['is_mongos'] = true
-			item.set['mongodb']['config']['instance_name'] = "mongos"
+			item['mongodb']['is_mongos'] = true
+			item['mongodb']['config']['instance_name'] = "mongos"
 		end
 	end
 end
