@@ -27,6 +27,7 @@ def init_item(instance_name,instance_config)
 	if overrides
 		Chef::Mixin::DeepMerge(instance_item,overrides)
 	end
+	Chef::Log.info("Item is #{instance_item}")
 	return instance_item
 end
 
