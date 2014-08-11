@@ -28,6 +28,7 @@ def init_item(instance_name,instance_config)
 		Chef::Mixin::DeepMerge(instance_item,overrides)
 	end
 	Chef::Log.info("Item is #{instance_item}")
+	Chef::Log.info("JSON is #{instance_item.to_json}")
 	return instance_item
 end
 
