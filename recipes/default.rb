@@ -39,13 +39,11 @@ end
 cluster_config = Chef::DataBag.new
 cluster_config.name("cluster_config")
 node['opsworks']['layers'].each do |layer,config|
-	Chef::Log.info("Layer name is #{layer}")
-	Chef::Log.info("Layer details are #{node['opsworks']['layers'][layer]}")
 	layer_name = node['opsworks']['layers'][layer]['name']
 	case 
 	when Regexp.new(node['opsworks-mongodb']['replset_layer_pattern']).match(layer_name)
 		shard_or_replset_name = $1
-		node['opsworks']['layers'][layer]['instances'].each do |instance|
+		node['opsworks']['layers'][layer]['instances'].each do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item['mongodb']['is_replicaset'] = true
 			if node['opsworks-mongodb']['sharded']
@@ -57,13 +55,13 @@ node['opsworks']['layers'].each do |layer,config|
 		end
 		save_item(item)
 	when layer_name == node['opsworks-mongodb']['configsvr_layer']
-		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance|
+		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item['mongodb']['is_configserver'] = true
 			save_item
 		end
 	when layer_name == node['opsworks-mongodb']['mongos_layer']
-		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance|
+		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item['mongodb']['is_mongos'] = true
 			item['mongodb']['config']['instance_name'] = "mongos"
