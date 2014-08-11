@@ -36,7 +36,7 @@ end
 
 def save_item(item)
 	db_item = Chef::DataBagItem.new
-	db_item.data_bag = "cluster_config"
+	db_item.data_bag("cluster_config")
 	db_item.raw_data = item.to_json
 	db_item.save
 end
