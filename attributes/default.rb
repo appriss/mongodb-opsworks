@@ -4,3 +4,4 @@ default['opsworks-mongodb']['mongos_layer'] = 'mongo-mongos'
 default['opsworks-mongodb']['sharded'] = false
 # Start with an empty node override section, this allows the user to use the stack JSON to override attributes (such as node priority) on an individual instance.
 default['opsworks-mongodb']['instance_overrides'] = ""
+normal['mongodb']['collection_name'] = 'cluster_config'
