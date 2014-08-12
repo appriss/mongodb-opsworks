@@ -88,6 +88,8 @@ nodes = search(
 
 Chef::Log.info("DDDD Node list is #{nodes}")
 
+Chef::Log.warn("We should have logged stuff before this")
+
 
 node_overrides = node['opsworks-mongodb']['instance_overrides'][node['opsworks']['instance']['hostname']]
 
