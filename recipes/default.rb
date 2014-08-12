@@ -93,6 +93,10 @@ end
 Chef::Log.warn("We should have logged stuff before this")
 
 
+allnodes = search(:node, "*:*")
+Chef::Log.info("Big node list is #{allnodes}")
+
+
 node_overrides = node['opsworks-mongodb']['instance_overrides'][node['opsworks']['instance']['hostname']]
 
 if node_overrides
