@@ -87,3 +87,15 @@ if node_overrides
 		Chef::Mixin::DeepMerge(instance_item,overrides)
 	end
 end
+
+
+nodes = search(
+      'cluster_config',
+      "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
+       mongodb_is_replicaset:true AND \
+       mongodb_shard_name:#{node['mongodb']['shard_name']} AND \
+       chef_environment:_default"
+    )
+
+Chef::Log.info("Node list is #{nodes}")
+
