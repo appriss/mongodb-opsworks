@@ -78,6 +78,15 @@ end
 
 Chef::Log.info("Databag: #{cluster_config}")
 
+nodes = search(
+      'cluster_config',
+      "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
+       mongodb_is_replicaset:true AND \
+       mongodb_shard_name:#{node['mongodb']['shard_name']} AND \
+       chef_environment:_default"
+    )
+
+Chef::Log.info("DDDD Node list is #{nodes}")
 
 
 node_overrides = node['opsworks-mongodb']['instance_overrides'][node['opsworks']['instance']['hostname']]
@@ -89,13 +98,5 @@ if node_overrides
 end
 
 
-nodes = search(
-      'cluster_config',
-      "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
-       mongodb_is_replicaset:true AND \
-       mongodb_shard_name:#{node['mongodb']['shard_name']} AND \
-       chef_environment:_default"
-    )
 
-Chef::Log.info("Node list is #{nodes}")
 
