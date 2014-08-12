@@ -86,7 +86,9 @@ nodes = search(
        chef_environment:_default"
     )
 
-Chef::Log.info("DDDD Node list is #{nodes}")
+nodes.each_index do |n|
+Chef::Log.info("Node is #{n}")
+end
 
 Chef::Log.warn("We should have logged stuff before this")
 
