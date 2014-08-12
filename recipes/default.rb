@@ -86,7 +86,7 @@ nodes = search(
        chef_environment:_default"
     )
 
-Chef::Log.info("DDDD Node list is ")
+Chef::Log.info("DDDD Node list is #{nodes.class}")
 
 Chef::Log.warn("We should have logged stuff before this")
 
