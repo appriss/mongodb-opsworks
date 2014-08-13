@@ -20,7 +20,7 @@ end
 
 def init_item(instance_name,instance_config)
 	#Deep copy node set
-	instance_item = Chef::Node.build(node.to_json)
+	instance_item = Chef::Node.json_create(JSON.parse(node.to_json))
 	Chef::Log.warn("Object type is #{instance_item.class}")
 	overrides = node['opsworks-mongodb']['instance_overrides'][instance_name]
 	instance_item["name"] = instance_name
