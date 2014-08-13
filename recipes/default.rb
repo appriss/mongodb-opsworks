@@ -39,6 +39,7 @@ def save_item(layer,item)
 	instance_root_node = node['opsworks']['layers'][layer]['instances'][item.name]
 	item.override['hostname'] = item.name
 	Chef::Log.info("Instance hostname is #{item['hostname']}")
+	Chef::Log.warn("Object dump: #{item.to_json}")
 	item.normal['fqdn'] = item.name + "localhost"
 	item.normal['ipaddress'] = instance_root_node['private_ip']
 	item.save
