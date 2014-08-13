@@ -33,7 +33,12 @@ def init_item(instance_name,instance_config)
 	return instance_item
 end
 
-def save_item(item)
+def save_item(layer,item)
+	instance_root_node = node['opsworks']['layers'][layer]['instances'][item.name]
+	item.normal['hostname'] = item.name
+	item.normal['fqdn'] = item.name + "localhost"
+	item.normal['ipaddress'] = instance_root_node['private_ip']
+
 	item.save
 	
 end
@@ -52,21 +57,21 @@ node['opsworks']['layers'].each do |layer,config|
 			else
 				item.normal['mongodb']['config']['replSet'] = shard_or_replset_name
 			end
-			save_item(item)
+			save_item(layer,item)
 		end
 		
 	when layer_name == node['opsworks-mongodb']['configsvr_layer']
 		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item.normal['mongodb']['is_configserver'] = true
-			save_item(item)
+			save_item(layer,item)
 		end
 	when layer_name == node['opsworks-mongodb']['mongos_layer']
 		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item.normal['mongodb']['is_mongos'] = true
 			item.normal['mongodb']['config']['instance_name'] = "mongos"
-			save_item(item)
+			save_item(layer,item)
 		end
 	end
 end
