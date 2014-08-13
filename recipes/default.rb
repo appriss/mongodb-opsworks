@@ -24,8 +24,8 @@ def init_item(instance_name,instance_config)
 	Chef::Log.info("Attribute class is: #{attrs.class}")
 	instance_item = JSON.parse(attrs.to_hash.to_json)
 	Chef::Log.warn("Object type is #{instance_item.class}")
-	instance_item['id'] = instance_name
 	overrides = node['opsworks-mongodb']['instance_overrides'][instance_name]
+	instance_item["name"] = instance_name
 	if overrides
 		Chef::Mixin::DeepMerge(instance_item,overrides)
 	end
@@ -35,10 +35,9 @@ def init_item(instance_name,instance_config)
 end
 
 def save_item(item)
-	db_item = Chef::DataBagItem.new
-	db_item.data_bag("cluster_config")
-	db_item.raw_data = item
-	db_item.save
+	newnode = Chef::Node.json_create(item)
+	newnode.save
+	
 end
 
 cluster_config = Chef::DataBag.new
