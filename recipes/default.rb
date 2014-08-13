@@ -33,8 +33,7 @@ def init_item(instance_name,instance_config)
 end
 
 def save_item(item)
-	newnode = Chef::Node.json_create(item)
-	newnode.save
+	item.save
 	
 end
 
@@ -47,12 +46,12 @@ node['opsworks']['layers'].each do |layer,config|
 		shard_or_replset_name = $1
 		node['opsworks']['layers'][layer]['instances'].each do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
-			item['mongodb']['is_replicaset'] = true
+			item.normal['mongodb']['is_replicaset'] = true
 			if node['opsworks-mongodb']['sharded']
-				item['mongodb']['is_shard'] = true
-				item['mongodb']['shard_name'] = shard_or_replset_name
+				item.normal['mongodb']['is_shard'] = true
+				item.normal['mongodb']['shard_name'] = shard_or_replset_name
 			else
-				item['mongodb']['config']['replSet'] = shard_or_replset_name
+				item.normal['mongodb']['config']['replSet'] = shard_or_replset_name
 			end
 			save_item(item)
 		end
@@ -60,14 +59,14 @@ node['opsworks']['layers'].each do |layer,config|
 	when layer_name == node['opsworks-mongodb']['configsvr_layer']
 		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
-			item['mongodb']['is_configserver'] = true
+			item.normal['mongodb']['is_configserver'] = true
 			save_item(item)
 		end
 	when layer_name == node['opsworks-mongodb']['mongos_layer']
 		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
-			item['mongodb']['is_mongos'] = true
-			item['mongodb']['config']['instance_name'] = "mongos"
+			item.normal['mongodb']['is_mongos'] = true
+			item.normal['mongodb']['config']['instance_name'] = "mongos"
 			save_item(item)
 		end
 	end
