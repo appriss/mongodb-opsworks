@@ -37,7 +37,7 @@ def save_item(layer,item)
 	Chef::Log.info("Layer name is #{layer}")
 	Chef::Log.info("Instance name is #{item.name}")
 	instance_root_node = node['opsworks']['layers'][layer]['instances'][item.name]
-	item.normal['hostname'] = item.name
+	item.override['hostname'] = item.name
 	Chef::Log.info("Instance hostname is #{item['hostname']}")
 	item.normal['fqdn'] = item.name + "localhost"
 	item.normal['ipaddress'] = instance_root_node['private_ip']
