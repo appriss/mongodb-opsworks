@@ -38,8 +38,6 @@ def save_item(item)
 	
 end
 
-cluster_config = Chef::DataBag.new
-cluster_config.name("cluster_config")
 node['opsworks']['layers'].each do |layer,config|
 	layer_name = node['opsworks']['layers'][layer]['name']
 	case 
@@ -73,10 +71,8 @@ node['opsworks']['layers'].each do |layer,config|
 	end
 end
 
-Chef::Log.info("Databag: #{cluster_config}")
-
 nodes = search(
-      'cluster_config',
+      :node,
       "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
        mongodb_is_replicaset:true AND \
        mongodb_shard_name:#{node['mongodb']['shard_name']} AND \
