@@ -81,7 +81,7 @@ nodes = search(
 
 nodes.each_index do |n|
 Chef::Log.info("Node is #{n}")
-Chef::Log.info("Node attr JSON is #{nodes[n].attrs.to_hash.to_json}")
+Chef::Log.info("Node attr JSON is #{nodes[n].attributes.to_hash.to_json}")
 end
 
 Chef::Log.warn("We should have logged stuff before this")
