@@ -40,8 +40,8 @@ def save_item(layer,item)
 	item.automatic['hostname'] = item.name
 	Chef::Log.info("Instance hostname is #{item['hostname']}")
 	Chef::Log.warn("Object dump: #{item.to_json}")
-	item.normal['fqdn'] = item.name + "localhost"
-	item.normal['ipaddress'] = instance_root_node['private_ip']
+	item.automatic['fqdn'] = item.name + "localhost"
+	item.automatic['ipaddress'] = instance_root_node['private_ip']
 	item.save
 	
 end
