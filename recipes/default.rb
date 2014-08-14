@@ -83,6 +83,16 @@ node['opsworks']['layers'].each do |layer,config|
 	end
 end
 
+#If our node is in a sharded + replicaset config, we need to prime the attributes.
+if node['mongodb-opsworks']['sharded'] 
+	node['opsworks']['instance']['layers'].each do |instance|
+		if Regexp.new(node['opsworks-mongodb']['replset_layer_pattern']).match(layer)
+			node.normal['mongodb']['is_replicaset'] = true
+		end
+	end
+end
+
+
 nodes = search(
       :node,
       "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
