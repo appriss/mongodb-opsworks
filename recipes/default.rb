@@ -42,7 +42,8 @@ def save_item(layer,item)
 	Chef::Log.warn("Object dump: #{item.to_json}")
 	item.automatic['fqdn'] = item.name + "localhost"
 	item.automatic['ipaddress'] = instance_root_node['private_ip']
-	item.save
+	#Don't duplicate the current node.
+	item.save unless node.name == item.name
 	
 end
 
