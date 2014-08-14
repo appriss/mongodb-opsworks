@@ -108,7 +108,7 @@ Chef::Log.info("Decision point!: #{node_overrides}")
 
 if node_overrides
 		Chef::Log.info("Merging node bases!")
-		Chef::Mixin::DeepMerge(node,node_overrides)
+		node.normal_attrs = Chef::Mixin::DeepMerge.merge(node.normal_attrs,node_overrides)
 end
 
 Chef::Log.info("After Node Overrides: #{node.to_json}")
