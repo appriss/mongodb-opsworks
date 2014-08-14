@@ -24,9 +24,10 @@ def init_item(instance_name,instance_config)
 	json['name'] = instance_name
 	instance_item = Chef::Node.json_create(json)
 	Chef::Log.warn("Object type is #{instance_item.class}")
-	overrides = node['opsworks-mongodb']['instance_overrides'][instance_name]
+	overrides = node['mongodb-opsworks']['instance_overrides'][instance_name]
 	if overrides
-		Chef::Mixin::DeepMerge(instance_item,overrides)
+		Chef::Log.info("Overriding attrs for instance #{instance_name}")
+		instance_item.normal_attrs = Chef::Mixin::DeepMerge.merge(instance_item.normal_attrs,overrides)
 	end
 	Chef::Log.info("Item is #{instance_item}")
 	Chef::Log.info("JSON is #{instance_item.to_json}")
