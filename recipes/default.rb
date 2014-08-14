@@ -101,8 +101,10 @@ Chef::Log.warn("We should have logged stuff before this")
 allnodes = search(:node, "*:*")
 Chef::Log.info("Big node list is #{allnodes}")
 
-
+Chef::Log.info("Attributes available to be overridden: #{node['opsworks-mongodb']['instance_overrides']}")
+Chef::Log.info("Node to be overridden: #{node['opsworks']['instance']['hostname']}")
 node_overrides = node['opsworks-mongodb']['instance_overrides'][node['opsworks']['instance']['hostname']]
+Chef::Log.info("Decision point!: #{node_overrides}")
 
 if node_overrides
 		Chef::Log.info("Merging node bases!")
