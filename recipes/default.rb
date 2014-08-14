@@ -105,6 +105,7 @@ Chef::Log.info("Big node list is #{allnodes}")
 node_overrides = node['opsworks-mongodb']['instance_overrides'][node['opsworks']['instance']['hostname']]
 
 if node_overrides
+		Chef::Log.info("Merging node bases!")
 		Chef::Mixin::DeepMerge(node,node_overrides)
 end
 
