@@ -68,13 +68,13 @@ node['opsworks']['layers'].each do |layer,config|
 		end
 		
 	when layer_name == node['opsworks-mongodb']['configsvr_layer']
-		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
+		node['opsworks']['layers'][layer]['instances'].each do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item.normal['mongodb']['is_configserver'] = true
 			save_item(layer,item)
 		end
 	when layer_name == node['opsworks-mongodb']['mongos_layer']
-		node['opsworks']['layers'][layer]['instances'].each_attribute do |instance,config|
+		node['opsworks']['layers'][layer]['instances'].each do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item.normal['mongodb']['is_mongos'] = true
 			item.normal['mongodb']['config']['instance_name'] = "mongos"
