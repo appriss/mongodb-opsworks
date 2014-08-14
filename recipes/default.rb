@@ -93,6 +93,13 @@ if node['mongodb-opsworks']['sharded']
 	end
 end
 
+#If we are a mongos, need to zap a coupel of attributes to ensure that the stuff actually works.
+node['opsworks']['instance']['layers'].each do |layer|
+	if node['opsworks']['layers'][layer]['name'] == node['mongodb-opsworks']['mongos_layer']
+		node.default['mongodb']['config']['nojournal'].delete
+	end
+end 
+
 
 nodes = search(
       :node,
