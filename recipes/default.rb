@@ -85,9 +85,10 @@ end
 
 #If our node is in a sharded + replicaset config, we need to prime the attributes.
 if node['mongodb-opsworks']['sharded'] 
-	node['opsworks']['instance']['layers'].each do |instance|
+	node['opsworks']['instance']['layers'].each do |layer|
 		if Regexp.new(node['opsworks-mongodb']['replset_layer_pattern']).match(layer)
 			node.normal['mongodb']['is_replicaset'] = true
+			node.normal['mongodb']['is_shard'] = true
 		end
 	end
 end
