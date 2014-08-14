@@ -97,8 +97,8 @@ end
 node['opsworks']['instance']['layers'].each do |layer|
 	Chef::Log.info("DEB: Layer name #{layer}")
 	Chef::Log.info("DEB: Layer desc #{node['opsworks']['layers'][layer]['name']}")
-	Chef::Log.info("DEB: Desired layer #{node['mongodb-opsworks']['mongos_layer']}")
-	if node['opsworks']['layers'][layer]['name'] == node['mongodb-opsworks']['mongos_layer']
+	Chef::Log.info("DEB: Desired layer #{node['opsworks-mongodb']['mongos_layer']}")
+	if node['opsworks']['layers'][layer]['name'] == node['opsworks-mongodb']['mongos_layer']
 		Chef::Log.info("DEB: deleting the nojournal option.")
 		node.default['mongodb']['config'].delete('nojournal') rescue nil
 	end
