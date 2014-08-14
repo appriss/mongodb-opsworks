@@ -105,10 +105,10 @@ Chef::Log.info("Big node list is #{allnodes}")
 node_overrides = node['opsworks-mongodb']['instance_overrides'][node['opsworks']['instance']['hostname']]
 
 if node_overrides
-	node_overrides.each_attribute do |key, val|
-		Chef::Mixin::DeepMerge(instance_item,overrides)
-	end
+		Chef::Mixin::DeepMerge(node,node_overrides)
 end
+
+Chef::Log.info("After Node Overrides: #{node.to_json}")
 
 
 
