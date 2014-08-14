@@ -43,6 +43,8 @@ def save_item(layer,item)
 	item.automatic['fqdn'] = item.name + "localhost"
 	item.automatic['ipaddress'] = instance_root_node['private_ip']
 	#Don't duplicate the current node.
+	Chef::Log.warn("Current node Name: \"#{node.name}\"")
+	Chef::Log.warn("Item node Name: \"#{item.name}\"")
 	item.save unless node.name == item.name
 	
 end
