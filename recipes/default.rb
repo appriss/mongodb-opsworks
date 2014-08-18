@@ -11,7 +11,7 @@ node['opsworks']['instance']['layers'].each do |layer|
 	Chef::Log.info("processing layer #{layer}.")
 	layer_name = node['opsworks']['layers'][layer]['name']
 	Chef::Log.info("Layer's name is #{layer_name}.")
-	if Regexp.new(node['opsworks-mongodb']['replset_layer_pattern']).match(layer_name)
+	if Regexp.new(node['mongodb-opsworks']['replset_layer_pattern']).match(layer_name)
 		Chef::Log.info("Setting Shard values to #{$1}")
 		node.normal['mongodb']['shard_name'] = $1
 		node.normal['mongodb']['config']['replSet'] = $1
@@ -53,12 +53,12 @@ end
 node['opsworks']['layers'].each do |layer,config|
 	layer_name = node['opsworks']['layers'][layer]['name']
 	case 
-	when Regexp.new(node['opsworks-mongodb']['replset_layer_pattern']).match(layer_name)
+	when Regexp.new(node['mongodb-opsworks']['replset_layer_pattern']).match(layer_name)
 		shard_or_replset_name = $1
 		node['opsworks']['layers'][layer]['instances'].each do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item.normal['mongodb']['is_replicaset'] = true
-			if node['opsworks-mongodb']['sharded']
+			if node['mongodb-opsworks']['sharded']
 				item.normal['mongodb']['is_shard'] = true
 				item.normal['mongodb']['shard_name'] = shard_or_replset_name
 			else
@@ -67,13 +67,13 @@ node['opsworks']['layers'].each do |layer,config|
 			save_item(layer,item)
 		end
 		
-	when layer_name == node['opsworks-mongodb']['configsvr_layer']
+	when layer_name == node['mongodb-opsworks']['configsvr_layer']
 		node['opsworks']['layers'][layer]['instances'].each do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item.normal['mongodb']['is_configserver'] = true
 			save_item(layer,item)
 		end
-	when layer_name == node['opsworks-mongodb']['mongos_layer']
+	when layer_name == node['mongodb-opsworks']['mongos_layer']
 		node['opsworks']['layers'][layer]['instances'].each do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item.normal['mongodb']['is_mongos'] = true
@@ -86,7 +86,7 @@ end
 #If our node is in a sharded + replicaset config, we need to prime the attributes.
 if node['mongodb-opsworks']['sharded'] 
 	node['opsworks']['instance']['layers'].each do |layer|
-		if Regexp.new(node['opsworks-mongodb']['replset_layer_pattern']).match(node['opsworks']['layers'][layer]['name'])
+		if Regexp.new(node['mongodb-opsworks']['replset_layer_pattern']).match(node['opsworks']['layers'][layer]['name'])
 			node.normal['mongodb']['is_replicaset'] = true
 			node.normal['mongodb']['is_shard'] = true
 		end
@@ -97,8 +97,8 @@ end
 node['opsworks']['instance']['layers'].each do |layer|
 	Chef::Log.info("DEB: Layer name #{layer}")
 	Chef::Log.info("DEB: Layer desc #{node['opsworks']['layers'][layer]['name']}")
-	Chef::Log.info("DEB: Desired layer #{node['opsworks-mongodb']['mongos_layer']}")
-	if node['opsworks']['layers'][layer]['name'] == node['opsworks-mongodb']['mongos_layer']
+	Chef::Log.info("DEB: Desired layer #{node['mongodb-opsworks']['mongos_layer']}")
+	if node['opsworks']['layers'][layer]['name'] == node['mongodb-opsworks']['mongos_layer']
 		Chef::Log.info("DEB: deleting the nojournal option.")
 		['nojournal','rest','smallfiles'].each do |option|
 			node.default['mongodb']['config'].delete(option) rescue nil
