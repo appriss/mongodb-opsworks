@@ -23,7 +23,7 @@ def init_item(instance_name,instance_config)
 	json = JSON.parse(node.to_json)
 	json['name'] = instance_name
 	instance_item = Chef::Node.json_create(json)
-	instance_item.normal['recipes'] = ['opsworks_ganglia::configure-client','ssh_users','mysql::client','agent_version',
+	instance_item.automatic['recipes'] = ['opsworks_ganglia::configure-client','ssh_users','mysql::client','agent_version',
 		'opsworks_stack_state_sync','mongodb-opsworks::default','test_suite','opsworks_cleanup']
 	Chef::Log.warn("Object type is #{instance_item.class}")
 	overrides = node['mongodb-opsworks']['instance_overrides'][instance_name]
@@ -63,11 +63,11 @@ node['opsworks']['layers'].each do |layer,config|
 			if node['mongodb-opsworks']['sharded']
 				item.normal['mongodb']['is_shard'] = true
 				item.normal['mongodb']['shard_name'] = shard_or_replset_name
-				item.normal['recipes'] << 'mongodb::shard'
-				item.normal['recipes'] << 'mongodb::replicaset'
+				item.automatic['recipes'] << 'mongodb::shard'
+				item.automatic['recipes'] << 'mongodb::replicaset'
 			else
 				item.normal['mongodb']['config']['replSet'] = shard_or_replset_name
-				item.normal['recipes'] << 'mongodb::replicaset'
+				item.automatic['recipes'] << 'mongodb::replicaset'
 			end
 			save_item(layer,item)
 		end
@@ -76,7 +76,7 @@ node['opsworks']['layers'].each do |layer,config|
 		node['opsworks']['layers'][layer]['instances'].each do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item.normal['mongodb']['is_configserver'] = true
-			item.normal['recipes'] << 'mongodb::configserver'
+			item.automatic['recipes'] << 'mongodb::configserver'
 			save_item(layer,item)
 		end
 	when layer_name == node['mongodb-opsworks']['mongos_layer']
@@ -84,7 +84,7 @@ node['opsworks']['layers'].each do |layer,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item.normal['mongodb']['is_mongos'] = true
 			item.normal['mongodb']['config']['instance_name'] = "mongos"
-			item.normal['recipes'] << 'mongodb::mongos'
+			item.automatic['recipes'] << 'mongodb::mongos'
 			save_item(layer,item)
 		end
 	end
