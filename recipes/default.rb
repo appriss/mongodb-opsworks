@@ -114,7 +114,7 @@ end
 #        mongodb_shard_name:#{node['mongodb']['shard_name']} AND \
 #        chef_environment:_default"
 #     )
-shard_nodes = search(
+nodes = search(
       node[:mongodb][:collection_name],
       "mongodb_cluster_name:#{node[:mongodb][:cluster_name]} AND \
        mongodb_is_shard:true AND \
