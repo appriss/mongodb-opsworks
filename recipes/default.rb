@@ -23,7 +23,7 @@ def init_item(instance_name,instance_config)
 	json = JSON.parse(node.to_json)
 	json['name'] = instance_name
 	instance_item = Chef::Node.json_create(json)
-	instance_item['recipes'] = ['opsworks_ganglia::configure-client','ssh_users','mysql::client','agent_version',
+	instance_item.normal['recipes'] = ['opsworks_ganglia::configure-client','ssh_users','mysql::client','agent_version',
 		'opsworks_stack_state_sync','mongodb-opsworks::default','test_suite','opsworks_cleanup']
 	Chef::Log.warn("Object type is #{instance_item.class}")
 	overrides = node['mongodb-opsworks']['instance_overrides'][instance_name]
