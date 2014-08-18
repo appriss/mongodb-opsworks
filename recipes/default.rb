@@ -58,7 +58,7 @@ node['opsworks']['layers'].each do |layer,config|
 		node['opsworks']['layers'][layer]['instances'].each do |instance,config|
 			item = init_item(instance,node['opsworks']['layers'][layer]['instances'][instance])
 			item.normal['mongodb']['is_replicaset'] = true
-			if node['opsworks-mongodb']['sharded']
+			if node['mongodb-opsworks']['sharded']
 				item.normal['mongodb']['is_shard'] = true
 				item.normal['mongodb']['shard_name'] = shard_or_replset_name
 			else
