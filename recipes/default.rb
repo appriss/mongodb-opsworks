@@ -14,7 +14,12 @@ node['opsworks']['instance']['layers'].each do |layer|
 	if Regexp.new(node['mongodb-opsworks']['replset_layer_pattern']).match(layer_name)
 		Chef::Log.info("Setting Shard values to #{$1}")
 		node.normal['mongodb']['shard_name'] = $1
-		node.normal['mongodb']['config']['replSet'] = $1
+		if node['mongodb-opsworks']['sharded']
+			set_name = $1
+			node.normal['mongodb']['config']['replSet'] = "rs_#{set_name}"
+		else
+			node.normal['mongodb']['config']['replSet'] = $1
+		end
 	end
 end
 
@@ -63,6 +68,7 @@ node['opsworks']['layers'].each do |layer,config|
 			if node['mongodb-opsworks']['sharded']
 				item.normal['mongodb']['is_shard'] = true
 				item.normal['mongodb']['shard_name'] = shard_or_replset_name
+				item.normal['mongodb']['config']['replSet'] = "rs_#{shard_or_replset_name}"
 				item.automatic['recipes'] << 'mongodb::shard'
 				item.automatic['recipes'] << 'mongodb::replicaset'
 			else
@@ -100,7 +106,7 @@ if node['mongodb-opsworks']['sharded']
 	end
 end
 
-#If we are a mongos, need to zap a coupel of attributes to ensure that the stuff actually works.
+#If we are a mongos, need to zap a couple of attributes to ensure that the stuff actually works.
 node['opsworks']['instance']['layers'].each do |layer|
 	Chef::Log.info("DEB: Layer name #{layer}")
 	Chef::Log.info("DEB: Layer desc #{node['opsworks']['layers'][layer]['name']}")
