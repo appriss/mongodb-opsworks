@@ -8,11 +8,9 @@
 #
 
 node['opsworks']['instance']['layers'].each do |layer|
-	Chef::Log.info("processing layer #{layer}.")
+	Chef::Log.info("Processing layer #{layer}.")
 	layer_name = node['opsworks']['layers'][layer]['name']
-	Chef::Log.info("Layer's name is #{layer_name}.")
 	if Regexp.new(node['mongodb-opsworks']['replset_layer_pattern']).match(layer_name)
-		Chef::Log.info("Setting Shard values to #{$1}")
 		node.normal['mongodb']['shard_name'] = $1
 		if node['mongodb-opsworks']['sharded']
 			set_name = $1
@@ -24,37 +22,30 @@ node['opsworks']['instance']['layers'].each do |layer|
 end
 
 def init_item(instance_name,instance_config)
-	#Deep copy node set
 	json = JSON.parse(node.to_json)
 	json['name'] = instance_name
 	instance_item = Chef::Node.json_create(json)
 	instance_item.automatic['recipes'] = ['opsworks_ganglia::configure-client','ssh_users','mysql::client','agent_version',
 		'opsworks_stack_state_sync','mongodb-opsworks::default','test_suite','opsworks_cleanup']
-	Chef::Log.warn("Object type is #{instance_item.class}")
 	overrides = node['mongodb-opsworks']['instance_overrides'][instance_name]
 	if overrides
 		Chef::Log.info("Overriding attrs for instance #{instance_name}")
 		instance_item.normal_attrs = Chef::Mixin::DeepMerge.merge(instance_item.normal_attrs,overrides)
 	end
-	Chef::Log.info("Item is #{instance_item}")
-	Chef::Log.info("JSON is #{instance_item.to_json}")
 	return instance_item
 end
 
 def save_item(layer,item)
-	Chef::Log.info("Layer name is #{layer}")
-	Chef::Log.info("Instance name is #{item.name}")
 	instance_root_node = node['opsworks']['layers'][layer]['instances'][item.name]
 	item.automatic['hostname'] = item.name
-	Chef::Log.info("Instance hostname is #{item['hostname']}")
-	Chef::Log.warn("Object dump: #{item.to_json}")
+	Chef::Log.warn("Object dump: #{item.to_json}") if node['mongodb-opsworks']['debug_objects']
 	item.automatic['fqdn'] = item.name + ".localdomain"
 	item.automatic['ipaddress'] = instance_root_node['private_ip']
 	#Don't duplicate the current node.
-	Chef::Log.warn("Current node Name: \"#{node['hostname']}\"")
-	Chef::Log.warn("Item node Name: \"#{item.name}\"")
-	item.save unless node['hostname'] == item.name
-	
+	unless node['hostname'] == item.name
+		Chef::Log.info("Saving Node: \"#{item.name}\"")
+		item.save 
+	end
 end
 
 node['opsworks']['layers'].each do |layer,config|
