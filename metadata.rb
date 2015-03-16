@@ -6,4 +6,4 @@ description      'Prepares an OpsWorks stack to run the chef-mongodb recipe'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '1.0.0'
 
-depends 'mongodb'
+depends 'mongodb', '== 15.2'
