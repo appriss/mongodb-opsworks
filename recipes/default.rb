@@ -125,16 +125,16 @@ end
 #       chef_environment:#{node.chef_environment}"
 #)
 
-nodes.each_index do |n|
-Chef::Log.info("Node is #{n}")
-Chef::Log.info("Node attr JSON is #{nodes[n].attributes.to_hash.to_json}")
-end
+#nodes.each_index do |n|
+#Chef::Log.info("Node is #{n}")
+#Chef::Log.info("Node attr JSON is #{nodes[n].attributes.to_hash.to_json}")
+#end
 
-Chef::Log.warn("We should have logged stuff before this")
+#Chef::Log.warn("We should have logged stuff before this")
 
 
-allnodes = search(:node, "*:*")
-Chef::Log.info("Big node list is #{allnodes}")
+#allnodes = search(:node, "*:*")
+#Chef::Log.info("Big node list is #{allnodes}")
 
 Chef::Log.info("Attributes available to be overridden: #{node['mongodb-opsworks']['instance_overrides']}")
 Chef::Log.info("Node to be overridden: #{node['opsworks']['instance']['hostname']}")
