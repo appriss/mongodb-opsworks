@@ -118,12 +118,12 @@ end
 #        mongodb_shard_name:#{node['mongodb']['shard_name']} AND \
 #        chef_environment:_default"
 #     )
-nodes = search(
-      node[:mongodb][:collection_name],
-      "mongodb_cluster_name:#{node[:mongodb][:cluster_name]} AND \
-       mongodb_is_shard:true AND \
-       chef_environment:#{node.chef_environment}"
-)
+#nodes = search(
+#      node[:mongodb][:collection_name],
+#      "mongodb_cluster_name:#{node[:mongodb][:cluster_name]} AND \
+#       mongodb_is_shard:true AND \
+#       chef_environment:#{node.chef_environment}"
+#)
 
 nodes.each_index do |n|
 Chef::Log.info("Node is #{n}")
